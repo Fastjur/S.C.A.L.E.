@@ -1,0 +1,14 @@
+.git
+docs
+.gitlab-ci
+README.md
+**/node_modules
+**/dist
+**/build
+.pytest_cache
+**/synth-data
+scheduler/db.sqlite3
+scripts/
+scheduler/celerybeat-schedule.bak
+scheduler/celerybeat-schedule.dat
+scheduler/celerybeat-schedule.dir

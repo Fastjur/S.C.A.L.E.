@@ -1,0 +1,419 @@
+digraph model_graph {
+  // Dotfile by Django-Extensions graph_models
+  // Created: 2023-11-20 13:10
+  // Cli Options: --dot -o models_customised.dot
+
+  fontname = "Roboto"
+  fontsize = 20
+  splines  = true
+  rankdir = "TB"
+
+  node [
+    fontname = "Roboto"
+    fontsize = 16
+    shape = "plaintext"
+  ]
+
+  edge [
+    fontname = "Roboto"
+    fontsize = 16
+  ]
+
+  // Labels
+  subgraph cluster_scheduling_app {
+    label=<
+          <TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">
+          <TR><TD COLSPAN="2" CELLPADDING="4" ALIGN="CENTER">
+          <FONT FACE="Roboto" COLOR="Black">
+          <B>scheduling_app</B>
+          </FONT>
+          </TD></TR>
+          </TABLE>
+          >
+    color=olivedrab4
+    style="rounded"
+
+    scheduling_app_models_file_File [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white"><B>
+      File
+      </B></FONT></TD></TR>
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>pod</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (pod_identifier)</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>source_file</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">created_date</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">deadline</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">file_path</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">TextField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">file_size</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">BigIntegerField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">process_step</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">state_code</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+
+
+      </TABLE>
+      >]
+
+    scheduling_app_models_metric_Metric [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white"><B>
+      Metric
+      </B></FONT></TD></TR>
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>source_file</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>OneToOneField (id)</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">end_time</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">expected_duration_at_schedule_time</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DurationField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">max_concurrency_at_execution_time</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">IntegerField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">start_time</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+      //================== CUSTOM ADDITIONS ================
+      <HR/>
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">duration</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">timedelta</FONT>
+      </TD></TR>
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">processing_speed</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">float</FONT>
+      </TD></TR>
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">percentage_error</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">float</FONT>
+      </TD></TR>
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">difference_with_deadline</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#1C7E9C" FACE="Roboto">timedelta</FONT>
+      </TD></TR>
+
+
+      </TABLE>
+      >]
+
+    scheduling_app_models_metric_kwh_measurment_MetricKwhMeasurement [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white"><B>
+      MetricKwhMeasurement
+      </B></FONT></TD></TR>
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>metric</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (source_file)</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">kwh</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">FloatField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">read_time</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+      </TABLE>
+      >]
+
+    scheduling_app_models_pod_Pod [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white"><B>
+      Pod
+      </B></FONT></TD></TR>
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>pod_identifier</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>UUIDField</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">created_date</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">ip</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">CharField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">labels</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">JSONField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">last_status_update</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">name</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">namespace</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">status</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto">CharField</FONT>
+      </TD></TR>
+
+
+      </TABLE>
+      >]
+
+    scheduling_app_models_task_queue_TaskQueueSourceFile [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white"><B>
+      TaskQueueSourceFile
+      </B></FONT></TD></TR>
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>source_file</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>task_queue</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">expected_duration</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">DurationField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">is_popped</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">BooleanField</FONT>
+      </TD></TR>
+
+
+      </TABLE>
+      >]
+
+    scheduling_app_models_task_queue_TaskQueue [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white"><B>
+      TaskQueue
+      </B></FONT></TD></TR>
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">has_started</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">BooleanField</FONT>
+      </TD></TR>
+
+
+
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto">start_time</FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto">DateTimeField</FONT>
+      </TD></TR>
+
+
+      </TABLE>
+      >]
+
+  }
+
+
+  // Relations
+
+  scheduling_app_models_file_File -> scheduling_app_models_file_File
+  [label=" source_file (file)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  scheduling_app_models_file_File -> scheduling_app_models_pod_Pod
+  [label=" pod (files)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  scheduling_app_models_metric_Metric -> scheduling_app_models_file_File
+  [label=" source_file (metric)"] [arrowhead=none, arrowtail=none, dir=both];
+
+  scheduling_app_models_metric_kwh_measurment_MetricKwhMeasurement -> scheduling_app_models_metric_Metric
+  [label=" metric (kwh_measurements)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  scheduling_app_models_task_queue_TaskQueueSourceFile -> scheduling_app_models_task_queue_TaskQueue
+  [label=" task_queue (files)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  scheduling_app_models_task_queue_TaskQueueSourceFile -> scheduling_app_models_file_File
+  [label=" source_file (taskqueuesourcefile)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+
+}

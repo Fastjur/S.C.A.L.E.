@@ -1,0 +1,14 @@
+@startuml create_diagram
+start
+#LightBlue : This is an example diagram written in PUML;
+if(start new repository) then
+    : Create activity diagram;
+    : Create use case diagram;
+    : Create sequence diagram;
+    : Create class diagram;
+else
+    : check and / or update them when you modify the code;
+endif
+#LightGreen : Add them / update them in the readme file;
+stop
+@enduml

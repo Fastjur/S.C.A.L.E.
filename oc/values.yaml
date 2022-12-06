@@ -1,0 +1,79 @@
+---
+image:
+  registry: redacted
+  name: scheduler  # Should be changed
+  tag: latest  # Can be overwritten from cli
+  pullPolicy: Always
+
+deployment:
+  name: scheduler  # Should be changed
+  replicaCount: 1
+  hostNetwork: false # Set to true if you want to use host network (only for local development)
+  database:
+    engine: django.db.backends.oracle
+    host: # Blank for oracle databases
+    port: # Blank for oracle databases
+
+service:
+  name: scheduler  # Should be changed
+  type: ClusterIP  # Check value for exposing outside the namespace
+  externalPort: 8000  # change as desired
+  internalPort: 8000  # change as desired
+
+route:
+  name: scheduler  # change as desired, will be part of the hostname
+
+serviceAccount:
+  name: scheduler-sa
+
+resources:
+  requests:
+    cpu: 250m  # change as desired
+    memory: 256Mi  # change as desired
+  limits:
+    cpu: 1000m  # change as desired
+    memory: 1024Mi  # change as desired
+
+synthetics:
+  gfc:
+    name: synthetic-gfc
+    image:
+      repository: redacted
+      name: synthetic-gfc
+      tag: latest
+      pullPolicy: Always
+    resources:
+      requests:
+        cpu: 250m  # change as desired
+        memory: 256Mi  # change as desired
+      limits:
+        cpu: 1000m  # change as desired
+        memory: 4096Mi  # change as desired
+  unzip:
+    name: synthetic-unzip
+    image:
+      repository: redacted
+      name: synthetic-unzip
+      tag: latest
+      pullPolicy: Always
+    resources:
+      requests:
+        cpu: 250m  # change as desired
+        memory: 256Mi  # change as desired
+      limits:
+        cpu: 1000m  # change as desired
+        memory: 4096Mi  # change as desired
+  unpickle:
+    name: synthetic-unpickle
+    image:
+      repository: redacted
+      name: synthetic-unpickle
+      tag: latest
+      pullPolicy: Always
+    resources:
+      requests:
+        cpu: 250m  # change as desired
+        memory: 256Mi  # change as desired
+      limits:
+        cpu: 1000m  # change as desired
+        memory: 4096Mi  # change as desired

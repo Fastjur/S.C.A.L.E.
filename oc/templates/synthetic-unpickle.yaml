@@ -1,0 +1,53 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.synthetics.unpickle.name }}
+  annotations:
+    app.openshift.io/connects-to: '[{"apiVersion":"apps/v1","kind":"Deployment","name":"scheduler"}]'
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      name: {{ .Values.synthetics.unpickle.name }}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.synthetics.unpickle.name }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }} # force rolling update
+    spec:
+      hostNetwork: {{ .Values.deployment.hostNetwork }}
+      containers:
+        - name: {{ .Values.synthetics.unpickle.name }}
+          image: "{{ .Values.synthetics.unpickle.image.repository }}/{{ .Values.synthetics.unpickle.image.name }}:{{ .Values.synthetics.unpickle.image.tag }}"
+          imagePullPolicy: {{ .Values.synthetics.unpickle.image.pullPolicy }}
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: scheduler-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scheduler-secret
+                  key: AWS_SECRET_ACCESS_KEY
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          resources:
+            limits:
+              cpu: {{ .Values.synthetics.unpickle.resources.limits.cpu }}
+              memory: {{ .Values.synthetics.unpickle.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.synthetics.unpickle.resources.requests.cpu }}
+              memory: {{ .Values.synthetics.unpickle.resources.requests.memory }}
+      terminationGracePeriodSeconds: 30

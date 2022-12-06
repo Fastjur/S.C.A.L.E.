@@ -1,0 +1,17 @@
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    name: {{.Values.route.name}}
+  name: {{.Values.route.name}}
+spec:
+  port:
+    targetPort: {{.Values.service.internalPort}}-tcp
+  tls:
+    termination: edge
+  to:
+    kind: Service
+    name: {{.Values.service.name}}
+    weight: 100
+  wildcardPolicy: None

@@ -1,0 +1,66 @@
+[default]
+DJANGO_LOG_LEVEL = "INFO"
+REDIS_HOST = "redis://redis:6379"
+DEBUG = false
+AWS_REGION_NAME = "default"
+DASHBOARD_BASE_URL = "http://scheduler:8000/scheduler"
+openshift_namespace = "namespace"
+check_pending_interval = 60
+mock_openshift = false
+# Needed for synthetics
+REQUESTS_TIMEOUT = 60
+create_schedule_interval = 600
+execute_task_queues_interval = 60
+update_pod_status_interval = 30
+default_file_deadline_seconds = 86400 # 1 day = 60 * 60 * 24
+MOCK_ENTSOE_API_CLIENT = false
+MAX_CONCURRENT_PROCESSORS = 4
+
+# Environment for when running tests
+[testing]
+DJANGO_LOG_LEVEL = "DEBUG"
+MOCK_ENTSOE_API_CLIENT = true
+mock_openshift = true
+pending_bucket = "test-bucket-pending"
+processing_bucket = "test-bucket-processing"
+MAX_CONCURRENT_PROCESSORS = 1
+AUTOMATED_DATA_GATHERING_USE_SEASON_AVERAGE = "summer"
+AUTOMATED_DATA_GATHERING_USE_YEAR_AVERAGE = 2021
+
+# Local means on your own machine, with a local openshift cluster
+[local]
+AWS_ENDPOINT_URL = "http://localhost:4566"
+DJANGO_LOG_LEVEL = "DEBUG"
+DEBUG = true
+pending_bucket = "pending"
+processing_bucket = "processing"
+openshift_namespace = "test-project"
+check_pending_interval = 30
+
+# Local means on your own machine, running in docker containers
+[local-docker]
+AWS_ENDPOINT_URL = "http://minio:9000"
+DJANGO_LOG_LEVEL = "DEBUG"
+DEBUG = true
+pending_bucket = "pending"
+processing_bucket = "processing"
+check_pending_interval = 10
+mock_openshift = 'docker'
+create_schedule_interval = 30
+execute_task_queues_interval = 5
+update_pod_status_interval = 5
+default_file_deadline_seconds = 600
+MOCK_ENTSOE_API_CLIENT = "squeezed"
+MAX_CONCURRENT_PROCESSORS = 4
+AUTOMATED_DATA_GATHERING = true
+#AUTOMATED_DATA_GATHERING_STEP = "get-system-base-processing-speed"
+#AUTOMATED_DATA_GATHERING_STEP = "increasing-file-size"
+AUTOMATED_DATA_GATHERING_STEP = "full-system-data-gathering"
+#AUTOMATED_DATA_GATHERING_STEP = "get-processing-speed-converging"
+#AUTOMATED_DATA_GATHERING_STEP = "run-all-synth-data-with-concurrency"
+AUTOMATED_DATA_GATHERING_PRE_CREATED_FILES_DIR = "synthetic/synth-data/pre-created-random-files/files"
+AUTOMATED_DATA_GATHERING_USE_PRE_CREATED_FILES = false
+AUTOMATED_DATA_GATHERING_USE_SEASON_AVERAGE = "summer"
+AUTOMATED_DATA_GATHERING_USE_YEAR_AVERAGE = 2021
+NO_DATA_DEFAULT_PROCESSING_SPEED = 1000
+AUTOMATED_DATA_GATHERING_PERCENTAGE_OF_DAY_REQUIRED = 0.5

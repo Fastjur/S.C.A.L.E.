@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: {{.Values.deployment.name}}
+  name: {{.Values.deployment.name}}
+spec:
+  replicas: {{.Values.deployment.replicaCount}}
+  selector:
+    matchLabels:
+      name: {{.Values.deployment.name}}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: {{ .Values.deployment.name }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }} # force rolling update
+    spec:
+      hostNetwork: {{ .Values.deployment.hostNetwork }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - name: {{.Chart.Name}}
+          image: "{{ .Values.image.registry }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+          env:
+            - name: DJANGO_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scheduler-secret
+                  key: DJANGO_SECRET_KEY
+            - name: ENTSOE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scheduler-secret
+                  key: ENTSOE_API_KEY
+            - name: AWS_ACCESS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: scheduler-secret
+                  key: AWS_ACCESS_KEY_ID
+            - name: AWS_SECRET_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: scheduler-secret
+                  key: AWS_SECRET_ACCESS_KEY
+            - name: SQL_ENGINE
+              value: {{ .Values.deployment.database.engine }}
+            - name: SQL_HOST
+              value: {{ .Values.deployment.database.host }}
+            - name: SQL_PORT
+              value: {{ .Values.deployment.database.port }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: {{.Values.service.internalPort}}-tcp
+              containerPort: {{.Values.service.internalPort}}
+              protocol: TCP
+          resources:
+            limits:
+              cpu: {{.Values.resources.limits.cpu}}
+              memory: {{.Values.resources.limits.memory}}
+            requests:
+              cpu: {{.Values.resources.requests.cpu}}
+              memory: {{.Values.resources.requests.memory}}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30

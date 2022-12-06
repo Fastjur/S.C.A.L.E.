@@ -1,0 +1,52 @@
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: scheduler
+  namespace: test-project
+---
+apiVersion: image.openshift.io/v1
+kind: ImageStream
+metadata:
+  name: synthetic-unzip
+  namespace: test-project
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: scheduler
+  name: scheduler
+  namespace: test-project
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: scheduler:latest
+  runPolicy: SerialLatestOnly
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    dockerStrategy:
+    type: Docker
+---
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    build: synthetic-unzip
+  name: synthetic-unzip
+  namespace: test-project
+spec:
+  output:
+    to:
+      kind: ImageStreamTag
+      name: synthetic-unzip:latest
+  runPolicy: SerialLatestOnly
+  source:
+    binary: {}
+    type: Binary
+  strategy:
+    dockerStrategy:
+    type: Docker

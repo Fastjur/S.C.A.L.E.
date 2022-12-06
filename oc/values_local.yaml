@@ -1,0 +1,56 @@
+---
+# This template should be used when running the openshift cluster locally using CodeReady Containers
+# IT IS NOT compatible with ICHP in any environment
+image:
+  registry: image-registry.openshift-image-registry.svc:5000/test-project
+  name: scheduler  # Should be changed
+  tag: latest  # Can be overwritten from cli
+  pullPolicy: Always
+
+deployment:
+  name: scheduler  # Should be changed
+  replicaCount: 1
+  hostNetwork: true # Set to true if you want to use host network (only for local development)
+
+service:
+  name: scheduler  # Should be changed
+  type: ClusterIP  # Check value for exposing outside the namespace
+  externalPort: 8000  # change as desired
+  internalPort: 8000  # change as desired
+
+route:
+  name: scheduler  # change as desired, will be part of the hostname
+
+serviceAccount:
+  name: scheduler-sa
+
+resources:
+  requests:
+    cpu: 250m  # change as desired
+    memory: 256Mi  # change as desired
+  limits:
+    cpu: 1000m  # change as desired
+    memory: 1024Mi  # change as desired
+
+synthetics:
+  gfc:
+    name: synthetic-gfc
+    image:
+      repository: image-registry.openshift-image-registry.svc:5000/test-project
+      name: synthetic-gfc
+      tag: latest
+      pullPolicy: Always
+  unzip:
+    name: synthetic-unzip
+    image:
+      repository: image-registry.openshift-image-registry.svc:5000/test-project
+      name: synthetic-unzip
+      tag: latest
+      pullPolicy: Always
+  unpickle:
+    name: synthetic-unpickle
+    image:
+      repository: image-registry.openshift-image-registry.svc:5000/test-project
+      name: synthetic-unpickle
+      tag: latest
+      pullPolicy: Always

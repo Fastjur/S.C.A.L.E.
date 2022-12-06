@@ -1,0 +1,191 @@
+version: '3'
+
+networks:
+  scheduler:
+    driver: bridge
+
+# This docker-compose file is used to run the scheduler locally in docker.
+# This should be used only for quick dev purposes for now.
+services:
+  #####
+  # Dependencies
+  #####
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks:
+      - scheduler
+    ports:
+      - "6379:6379"
+    environment:
+      - ENV_FOR_DYNACONF=local-docker
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    networks:
+      - scheduler
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+  psql:
+    image: postgres:latest
+    container_name: psql
+    networks:
+      - scheduler
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: django
+      POSTGRES_PASSWORD: django
+      POSTGRES_DB: django
+    volumes:
+      - psql_data:/var/lib/postgresql/data
+
+  #####
+  # The scheduler app and scheduling tools
+  #####
+  scheduler:
+    build: .
+    container_name: scheduler
+    networks:
+      - scheduler
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "8000:8000"
+    command: python3.11 manage.py runserver 0.0.0.0:8000 --noreload
+    healthcheck:
+      test: ["CMD", "curl", "-Lf", "localhost:8000/health/"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      - psql
+      - minio
+      - redis
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - DJANGO_SECRET_KEY=
+      - DJANGO_SETTINGS_MODULE=scheduler.settings
+      - ENTSOE_API_KEY=
+      - ENV_FOR_DYNACONF=local-docker
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=django
+      - SQL_USER=django
+      - SQL_PASSWORD=django
+      - SQL_HOST=psql
+      - SQL_PORT=5432
+  celery:
+    build: .
+    entrypoint: celery
+    command: -A scheduler worker -l INFO
+    container_name: celery
+    networks:
+      - scheduler
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      - redis
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - DJANGO_SECRET_KEY=
+      - DJANGO_SETTINGS_MODULE=scheduler.settings
+      - ENV_FOR_DYNACONF=local-docker
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=django
+      - SQL_USER=django
+      - SQL_PASSWORD=django
+      - SQL_HOST=psql
+      - SQL_PORT=5432
+  celery-beat:
+    build: .
+    entrypoint: celery
+    command: -A scheduler beat -l INFO -s /tmp/celerybeat-schedule
+    container_name: celery-beat
+    networks:
+      - scheduler
+    depends_on:
+      - redis
+    environment:
+      - DJANGO_SECRET_KEY=
+      - DJANGO_SETTINGS_MODULE=scheduler.settings
+      - ENV_FOR_DYNACONF=local-docker
+      - SQL_ENGINE=django.db.backends.postgresql
+      - SQL_DATABASE=django
+      - SQL_USER=django
+      - SQL_PASSWORD=django
+      - SQL_HOST=psql
+      - SQL_PORT=5432
+
+  #####
+  # Synthetics
+  #####
+  synthetic-gfc:
+    build:
+      dockerfile: synthetic-gfc.Dockerfile
+#    container_name: synthetic-gfc
+    deploy:
+      replicas: 0
+    depends_on:
+      - scheduler
+    networks:
+      - scheduler
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - ENV_FOR_DYNACONF=local-docker
+  synthetic-unzip:
+    build:
+      dockerfile: synthetic-unzip.Dockerfile
+#    container_name: synthetic-unzip
+    deploy:
+      replicas: 0
+    depends_on:
+      - scheduler
+    networks:
+      - scheduler
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - ENV_FOR_DYNACONF=local-docker
+  synthetic-unpickle:
+    build:
+      dockerfile: synthetic-unpickle.Dockerfile
+#    container_name: synthetic-unpickle
+    deploy:
+      replicas: 0
+    depends_on:
+      - scheduler
+    networks:
+      - scheduler
+    environment:
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - ENV_FOR_DYNACONF=local-docker
+
+  #####
+  # Supporting tools
+  #####
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    networks:
+      - scheduler
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - psql
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+volumes:
+  psql_data:
+  minio_data:
+  pgadmin_data:
