@@ -46,7 +46,7 @@ pillow = "^10.0.0"
 pydevd-pycharm = ">=232.9559.58,<232.9560.0"
 pytest-django = "^4.5.2"
 seaborn = {extras = ["stats"], version = "^0.13.0"}
-notebook = "^7.0.6"
+notebook = "^7.0.7"
 django-extensions = "^3.2.3"
 statsmodels = "^0.14.0"
 
