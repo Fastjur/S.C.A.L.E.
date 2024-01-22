@@ -42,7 +42,7 @@ flake8-isort = "^6.0.0"
 flake8-black = "^0.3.6"
 matplotlib = "^3.7.2"
 tqdm = "^4.66.1"
-pillow = "^10.0.0"
+pillow = "^10.2.0"
 pydevd-pycharm = ">=232.9559.58,<232.9560.0"
 pytest-django = "^4.5.2"
 seaborn = {extras = ["stats"], version = "^0.13.0"}
